@@ -1,0 +1,52 @@
+---
+title: "Validation of Reference Intervals"
+output:
+  word_document:
+    reference_docx: "./template.docx"
+params:
+  validation_results: NULL
+  validation_flextable: NULL
+  distinct_patients: FALSE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, 
+                      error = FALSE)
+library(dplyr)
+library(stringr)
+```
+
+## Background
+
+## Method
+
+```{r}
+tests_text <- params$validation_results %>%
+  distinct(test_name) %>%
+  use_series("test_name") %>%
+  str_c(collapse = ", ")
+```
+
+
+Indirect validation of the reference intervals for `r tests_text` was performed. The LIMS was searched for tests results from [describe locations] between [start date] and [end date]. `r if (params$distinct_patients) "If a patient had a test multiple times during this period, only the first result was used."`
+
+The reference limits were validated by calculating the proportion of the population falling above the upper limit and below the lower limit. These were interpreted as described in Lahti et al. (1):
+
+- If any of the proportions are &le;0.9% or &ge;4.1%, this indicates indicates the reference interval is unsuitable for the local population and method.
+- If both of the proportions are between 1.8% and 3.2%, this indicates the reference interval is suitable for the local population and method.
+- Otherwise, the validation is inconclusive. Clinical judgement, scientific judgement and data from the literature should be used to decide whethre the reference interval is suitable for the local population and method.
+
+Reference intervals were also estimated from the population using the non-parametric method decribed in CLSI EP28-A3 (2).
+
+## Results
+
+```{r}
+params$validation_flextable
+```
+
+## Discussion
+
+## References
+
+1. Lahti A, Petersen PH, Boyd JC, Rustad P, Laake P, Solberg HE. Partitioning of Nongaussian-Distributed Biochemical Reference Data into Subgroups. Clinical Chemistry. 2004;50;891--900.
+2. Clinical and Laboratory Standards Institute. EP28-A3: Defining, establishing and verifying reference intervals in the clinical laboratory. 3rd ed. 2010.
